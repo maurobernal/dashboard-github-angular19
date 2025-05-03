@@ -1,7 +1,11 @@
-  <div class="grid grid-flow-row gap-2 text-neutral-600 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      <ng-container *ngFor="let org of listPullsEntity.Pulls" class="min-h-fit">
-            <div *ngFor="let pull of org" class="min-h-fit">
-                <app-repos [pull]="pull"></app-repos>
-            </div>
-      </ng-container>
-  </div>
+<div class="grid grid-flow-row gap-2 text-neutral-600 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+  @for (org of listPullsEntity.Pulls; track org) {
+    <ng-container class="min-h-fit">
+      @for (pull of org; track pull) {
+        <div class="min-h-fit">
+          <app-repos [pull]="pull"></app-repos>
+        </div>
+      }
+    </ng-container>
+  }
+</div>

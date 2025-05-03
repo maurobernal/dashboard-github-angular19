@@ -4,11 +4,12 @@ import { GithubRepos, ListPullsEntity } from '@interfaces/githubrepos';
 import { configGitHub } from 'enviroments.secrets';
 import { Observable } from 'rxjs';
 import { GithubService } from 'src/app/services/github.service';
+import { ReposComponent } from './repos/repos.component';
 
 @Component({
   selector: 'app-listrepos',
   templateUrl: './listrepos.component.html',
-  styleUrls: ['./listrepos.component.sass'],
+imports: [ReposComponent],
 })
 export class ListreposComponent implements OnInit {
   constructor(private readonly githubService : GithubService) {

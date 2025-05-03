@@ -1,40 +1,46 @@
-<div class="my-2 rounded shadow-lg shadow-gray-200 dark:shadow-gray-900 bg-white min-h-[170px]   dark:bg-gray-800 duration-300 hover:-translate-y-1 text-center">
-      <div class="bg-slate-100">
-        <h1 class="text-xs mb-4 font-bold leading-relaxed text-purple-950" x-text="post.title">
-          {{ pull!.base.repo.name  }}
-        </h1>
+<div
+  class="my-2 rounded shadow-lg shadow-gray-200 dark:shadow-gray-900 bg-white min-h-[170px]   dark:bg-gray-800 duration-300 hover:-translate-y-1 text-center">
+  <div class="bg-slate-100">
+    <h1 class="text-xs mb-4 font-bold leading-relaxed text-purple-950" x-text="post.title">
+      {{ pull!.base.repo.name }}
+    </h1>
+  </div>
+  <h1 class="text-lg font-bold text-purple-100">
+    #{{ pull!.number }} {{ pull!.title }}
+  </h1>
+
+  <div class="grid grid-flow-col leading-5 text-gray-500 dark:text-gray-400 p-2">
+
+    @for (user of pull!.assignees; track user) {
+    <div>
+      <small class="text-green-600 font-bold"> <i class="bi bi-person-circle"></i> {{user.login}}</small>
+    </div>
+    }
+    <small><i class="bi bi-calendar"></i> {{ pull!.created_at | date:'medium' }}</small>
+    <small class="bg-black px-2 rounded-sm">{{ pull!.state }}</small>
+  </div>
+  @if (pull!.merged_at) {
+  <div>
+    <small class="bg-blue-700 text-gray-100 px-2 rounded-sm">Merged</small>
+    <small class="text-blue-400 px-2">{{pull!.merged_at | date:'medium' }}
+    </small>
+  </div>
+  }
+
+  <div class="flex items-center justify-between px-6">
+    <div class="grid grid-flow-col p-2">
+      @for (label of pull!.labels; track label) {
+      <div class="inline-block relative rounded-md bg-gray-400 ml-2">
+        <small class="leading-5 text-black font-bold text-xs p-2">{{label.name}}</small>
       </div>
-      <h1 class="text-lg font-bold text-purple-100">
-          #{{ pull!.number }} {{ pull!.title }}
-      </h1>
+      }
+    </div>
 
-        <div class="grid grid-flow-col leading-5 text-gray-500 dark:text-gray-400 p-2">
-
-            <div *ngFor="let user of pull!.assignees">
-              <small class="text-green-600 font-bold"> <i class="bi bi-person-circle"></i> {{user.login}}</small>
-            </div>
-            <small><i class="bi bi-calendar"></i> {{ pull!.created_at | date:'medium' }}</small>
-            <small class="bg-black px-2 rounded-sm">{{ pull!.state }}</small>
-        </div>
-          <div *ngIf="pull!.merged_at">
-                <small class="bg-blue-700 text-gray-100 px-2 rounded-sm">Merged</small>
-                <small class="text-blue-400 px-2">{{pull!.merged_at | date:'medium' }}
-                </small>
-          </div>
-
-        <div class="flex items-center justify-between px-6">
-              <div class="grid grid-flow-col p-2">
-                <div *ngFor="let label of pull!.labels"
-                  class="inline-block relative rounded-md bg-gray-400 ml-2">
-                          <small class="leading-5 text-black font-bold text-xs p-2">{{label.name}}</small>
-                </div>
-              </div>
-
-            <a href="{{pull!.html_url}}" target="_blank"
-              class="middle none font-sans font-bold center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-2 px-4 rounded-lg border border-blue-500 text-blue-500 hover:opacity-75 focus:ring focus:ring-blue-200 active:opacity-[0.85]">
-              <i class="bi bi-eye"></i> ...
-            </a>
-        </div>
+    <a href="{{pull!.html_url}}" target="_blank"
+      class="middle none font-sans font-bold center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-2 px-4 rounded-lg border border-blue-500 text-blue-500 hover:opacity-75 focus:ring focus:ring-blue-200 active:opacity-[0.85]">
+      <i class="bi bi-eye"></i> ...
+    </a>
+  </div>
 
 
 </div>

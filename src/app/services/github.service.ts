@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { GithubSearchPulls } from '@interfaces/githubsearchpulls';
 import { GithubRepos } from '../interfaces/githubrepos';
 import { GithubPulls } from '../interfaces/githubpulls';
-import HttpClientBase from './httpclientbase';
+import HttpClientBase from './httpClientBase';
+
 
 @Injectable({
   providedIn: 'root',

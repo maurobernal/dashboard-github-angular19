@@ -58,10 +58,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "dashboard-github:build:production"
+              "buildTarget": "dashboard-github:build:production"
             },
             "development": {
-              "browserTarget": "dashboard-github:build:development"
+              "buildTarget": "dashboard-github:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -69,7 +69,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "dashboard-github:build"
+            "buildTarget": "dashboard-github:build"
           }
         },
         "test": {
@@ -93,9 +93,7 @@
     }
   },
   "cli": {
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ],
+    "schematicCollections": ["@angular-eslint/schematics"],
     "analytics": false
   }
 }
