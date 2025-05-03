@@ -6,6 +6,7 @@ import {
 import { configGitHub } from 'enviroments.secrets';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
+import SweetAlertService from './sweetalert.service';
 
 function handleError(error: HttpErrorResponse): Observable<never> {
   let errorMessage = '';
@@ -14,6 +15,7 @@ function handleError(error: HttpErrorResponse): Observable<never> {
   } else {
     errorMessage = `Error code: ${error.status}, message: ${error.message}`;
   }
+  SweetAlertService.showErrorPopUpWithText( errorMessage, error?.url?? 'error',);
   return throwError(() => new Error(errorMessage));
 }
 

@@ -13,7 +13,7 @@ import * as _ from 'lodash';
 @Component({
   selector: 'app-kpi1',
   templateUrl: './kpi1.component.html',
-  styleUrls: ['./kpi1.component.sass'],
+  imports: [BaseChartDirective],
 })
 export class Kpi1Component implements OnInit {
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
