@@ -1,11 +1,13 @@
+<h1>List of repos</h1>
 <div class="grid grid-flow-row gap-2 text-neutral-600 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-  @for (org of listPullsEntity.Pulls; track org) {
-    <ng-container class="min-h-fit">
-      @for (pull of org; track pull) {
-        <div class="min-h-fit">
-          <app-repos [pull]="pull"></app-repos>
-        </div>
-      }
-    </ng-container>
+  {{listPullsEntity().Pulls| json}}
+  @for (org of listPullsEntity().Pulls; track org) {
+  <ng-container class="min-h-fit">
+    @for (pull of org; track pull) {
+    <div class="min-h-fit">
+      <app-repos [pull]="pull"></app-repos>
+    </div>
+    }
+  </ng-container>
   }
 </div>

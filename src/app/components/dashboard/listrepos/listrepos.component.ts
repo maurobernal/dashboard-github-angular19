@@ -1,22 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit, signal, Signal } from '@angular/core';
 import { GithubPulls } from '@interfaces/githubpulls';
 import { GithubRepos, ListPullsEntity } from '@interfaces/githubrepos';
 import { configGitHub } from 'enviroments.secrets';
 import { Observable } from 'rxjs';
 import { GithubService } from 'src/app/services/github.service';
 import { ReposComponent } from './repos/repos.component';
+import { JsonPipe } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-listrepos',
   templateUrl: './listrepos.component.html',
-imports: [ReposComponent],
+  imports: [ReposComponent, JsonPipe],
 })
 export class ListreposComponent implements OnInit {
   constructor(private readonly githubService : GithubService) {
-    this.listPullsEntity = { Pulls: [] };
+
+
+
+  effect(() => this.repoUserSignal()?.forEach((m)=>{this.githubService
+        .getPull(`repos/${configGitHub.user}/${m.name}/pulls?state=open&sort=created&per_page=10&page=1`)
+        .subscribe((pull) => {
+            console.log(pull.length,'pull length');
+          if (pull.length > 0) {
+            console.log(pull,'pull');
+            this.listPullsEntity().Pulls.push(pull);
+          }
+        });}))
+
   }
 
-  repoUser$ :Observable<GithubRepos[]> = this.githubService.getRepo(`users/${configGitHub.user}/repos`);
+  repoUserSignal: Signal<GithubRepos[]| undefined> = toSignal(this.githubService.getRepo(`users/${configGitHub.user}/repos`));
 
   repoOrg$ :Observable<GithubRepos[]> = this.githubService.getRepo(`orgs/${configGitHub.org}/repos`);
 
@@ -28,7 +42,7 @@ export class ListreposComponent implements OnInit {
 
   listRepoNameUser: string[] = [];
 
-  listPullsEntity: ListPullsEntity;
+  listPullsEntity = signal<ListPullsEntity>({ Pulls: []});
 
   repoPullsOrg$ : Observable<GithubPulls[]> | undefined = undefined;
 
@@ -38,17 +52,7 @@ export class ListreposComponent implements OnInit {
         .getPull(`repos/${configGitHub.org}/${m.name}/pulls?state=open&sort=created&per_page=10&page=1`)
         .subscribe((pull) => {
           if (pull.length > 0) {
-            this.listPullsEntity?.Pulls.push(pull);
-          }
-        });
-    }));
-
-    this.repoUser$.subscribe(s => s.forEach((m) => {
-      this.githubService
-        .getPull(`repos/${configGitHub.user}/${m.name}/pulls?state=open&sort=created&per_page=10&page=1`)
-        .subscribe((pull) => {
-          if (pull.length > 0) {
-            this.listPullsEntity?.Pulls.push(pull);
+            this.listPullsEntity().Pulls.push(pull);
           }
         });
     }));
