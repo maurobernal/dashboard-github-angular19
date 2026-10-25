@@ -1,0 +1,31 @@
+@import 'tailwindcss';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply min-h-screen bg-slate-950 text-slate-200 antialiased;
+  }
+}
+
+@layer components {
+  .field {
+    @apply grid gap-1 text-sm;
+
+    > span {
+      @apply text-xs font-medium tracking-wide text-slate-400 uppercase;
+    }
+
+    > input,
+    > select {
+      @apply w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-slate-100 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-500/30;
+    }
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs whitespace-nowrap;
+  }
+}

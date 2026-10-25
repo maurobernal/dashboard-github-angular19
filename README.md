@@ -1,41 +1,59 @@
-# DashboardGithub
+# GitHub PR Dashboard
+
 ![resumen project](https://github.com/maurobernal/-dashboard-github/blob/main/githubdashboard.png)
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.0.
 
+Dashboard de los pull requests **abiertos** de una organización y de un usuario de GitHub, con
+filtros dinámicos (origen, repositorio, autor, draft, label, estado de review), estado de las
+GitHub Actions/checks y cantidad de comentarios. Los filtros se reflejan en la URL, así que una vista
+filtrada se puede guardar o compartir.
 
-## Install
-#Install Packages dependencies. You must run
-npm i
+Angular 22 · zoneless · signals · `httpResource` · Signal Forms · Tailwind 4 · ng2-charts · Vitest.
 
-#Secrets. You need enviroments.secrets.ts. 
-cp enviroments.secrets.sample.ts enviroments.secrets.ts
+## Requisitos
 
-#Change values in enviroments.secrets.ts
-## Development server
+- Node `>= 24.15` o `>= 26` (ver `.nvmrc`)
+- [Bun](https://bun.sh)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Configuración
 
-## Code scaffolding
+```bash
+bun install
+cp src/environments/github.secrets.sample.ts src/environments/github.secrets.ts
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Completá `token`, `user` y `org` en `src/environments/github.secrets.ts` (está en `.gitignore`).
 
-## Build
+Permisos del token: fine-grained PAT con lectura de _Metadata_, _Pull requests_, _Commit statuses_
+y _Checks_; o classic PAT con `repo` + `read:org`.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+> ⚠️ El token queda embebido en el bundle del front. Usalo sólo localmente: no publiques el build.
 
-## Running unit tests
+## Scripts
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+| Comando          | Descripción                          |
+| ---------------- | ------------------------------------ |
+| `bun start`      | Dev server en http://localhost:4200  |
+| `bun run build`  | Build de producción en `dist/`       |
+| `bun run test`   | Tests unitarios (Vitest)             |
+| `bun run lint`   | ESLint (angular-eslint, flat config) |
+| `bun run format` | Prettier                             |
 
-## Running end-to-end tests
+## Arquitectura
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```
+src/app/
+├── core/github/              # config (InjectionToken), interceptor de auth, query GraphQL + tipos crudos
+├── features/pull-requests/
+│   ├── open-pull-requests.resource.ts   # httpResource → GraphQL (una sola request para org + usuario)
+│   ├── pull-request.mapper.ts           # respuesta GraphQL → modelo de dominio
+│   ├── pull-request-filters.ts          # filtrado, opciones dinámicas y sync con query params (funciones puras)
+│   ├── pull-requests-page/              # página: estado (signals) y composición
+│   ├── filters-panel/                   # Signal Forms
+│   ├── kpi-summary/ · kpi-charts/       # indicadores; los gráficos (chart.js) se cargan con @defer
+│   └── pull-request-card/
+└── shared/                   # chip-select (custom control de Signal Forms), pipe relativeTime
+```
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
-
-
-
-#Inspire by
-https://github.com/valor-software/ng2-charts/tree/master/src/app
+Se usa la API **GraphQL** de GitHub porque en una sola consulta trae PRs, reviews, comentarios y el
+resultado de los checks (`statusCheckRollup`). La búsqueda devuelve hasta 100 PRs por origen; si hay
+más, el dashboard lo avisa.

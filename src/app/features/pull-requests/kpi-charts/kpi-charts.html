@@ -1,0 +1,21 @@
+<div class="grid gap-3 lg:grid-cols-2">
+  <figure class="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+    <figcaption class="mb-2 text-sm text-slate-300">
+      Top {{ byRepository().labels?.length }} repos con más PRs abiertos
+    </figcaption>
+    <div class="h-64">
+      <canvas
+        baseChart
+        type="bar"
+        [data]="byRepository()"
+        [options]="horizontalBarOptions"
+      ></canvas>
+    </div>
+  </figure>
+  <figure class="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+    <figcaption class="mb-2 text-sm text-slate-300">Antigüedad de los PRs abiertos</figcaption>
+    <div class="h-64">
+      <canvas baseChart type="bar" [data]="byAge()" [options]="verticalBarOptions"></canvas>
+    </div>
+  </figure>
+</div>

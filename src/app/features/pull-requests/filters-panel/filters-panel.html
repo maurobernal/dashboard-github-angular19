@@ -1,0 +1,79 @@
+@let opts = options();
+<section
+  role="search"
+  aria-label="Filtros"
+  class="grid gap-4 rounded-xl border border-slate-800 bg-slate-900/60 p-4"
+>
+  <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
+    <label class="field sm:col-span-2">
+      <span>Buscar</span>
+      <input type="search" placeholder="Título o #número" [formField]="filterForm.search" />
+    </label>
+
+    <label class="field">
+      <span>Origen</span>
+      <select [formField]="filterForm.owner">
+        <option value="all">Todos</option>
+        <option value="org">Org · {{ org() }}</option>
+        <option value="user">Usuario · {{ user() }}</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Autor</span>
+      <select [formField]="filterForm.author">
+        <option value="">Todos</option>
+        @for (author of opts.authors; track author) {
+          <option [value]="author" [selected]="author === filterForm.author().value()">
+            {{ author }}
+          </option>
+        }
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Estado</span>
+      <select [formField]="filterForm.draft">
+        <option value="all">Todos</option>
+        <option value="ready">Listos para review</option>
+        <option value="draft">Draft</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Review</span>
+      <select [formField]="filterForm.review">
+        <option value="all">Todas</option>
+        @for (option of reviewOptions; track option[0]) {
+          <option [value]="option[0]">{{ option[1] }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Label</span>
+      <select [formField]="filterForm.label">
+        <option value="">Todos</option>
+        @for (label of opts.labels; track label) {
+          <option [value]="label" [selected]="label === filterForm.label().value()">
+            {{ label }}
+          </option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <div class="grid gap-2">
+    <div class="flex items-center justify-between">
+      <span class="text-xs font-medium tracking-wide text-slate-400 uppercase">Repositorios</span>
+      <button type="button" class="text-xs text-violet-300 hover:text-violet-100" (click)="reset()">
+        Limpiar filtros
+      </button>
+    </div>
+    <app-chip-select
+      [formField]="filterForm.repositories"
+      [options]="opts.repositories"
+      [display]="repositoryName"
+    />
+  </div>
+</section>

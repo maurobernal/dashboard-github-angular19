@@ -1,0 +1,91 @@
+<div class="mx-auto grid max-w-screen-2xl gap-6 px-4 py-6 sm:px-6">
+  <header class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-semibold text-slate-100">
+        <i class="bi bi-github" aria-hidden="true"></i> Pull requests abiertos
+      </h1>
+      <p class="text-sm text-slate-400">
+        Org <strong class="text-slate-200">{{ config.org }}</strong> · usuario
+        <strong class="text-slate-200">{{ config.user }}</strong>
+      </p>
+    </div>
+
+    <div class="flex items-center gap-3 text-xs text-slate-400">
+      @if (search.hasValue()) {
+        <span>Actualizado {{ lastUpdated() | relativeTime }}</span>
+      }
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-2 text-slate-200 hover:border-violet-400 disabled:opacity-50"
+        [disabled]="search.isLoading()"
+        (click)="search.reload()"
+      >
+        <i
+          class="bi bi-arrow-clockwise"
+          [class.animate-spin]="search.isLoading()"
+          aria-hidden="true"
+        ></i>
+        Actualizar
+      </button>
+    </div>
+  </header>
+
+  @if (errorMessage(); as message) {
+    <p
+      role="alert"
+      class="rounded-lg border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-200"
+    >
+      <i class="bi bi-exclamation-triangle" aria-hidden="true"></i> {{ message }}
+    </p>
+  }
+
+  <app-filters-panel
+    [(filters)]="filters"
+    [options]="options()"
+    [org]="config.org"
+    [user]="config.user"
+  />
+
+  <app-kpi-summary [pullRequests]="visiblePullRequests()" />
+
+  <section class="grid gap-3" aria-labelledby="pr-list-title">
+    <h2 id="pr-list-title" class="text-sm text-slate-400" aria-live="polite">
+      Mostrando {{ visiblePullRequests().length }} de {{ allPullRequests().length }} PRs
+      @if (isTruncated()) {
+        <span class="text-amber-300">
+          · GitHub devolvió {{ totalCount() }} resultados; se cargaron los 100 más recientes por
+          origen.
+        </span>
+      }
+    </h2>
+
+    <ul class="grid gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+      @for (pr of visiblePullRequests(); track pr.id) {
+        <li><app-pull-request-card [pullRequest]="pr" /></li>
+      } @empty {
+        @if (search.isLoading() && !search.hasValue()) {
+          @for (placeholder of [1, 2, 3, 4, 5, 6]; track placeholder) {
+            <li class="h-40 animate-pulse rounded-xl border border-slate-800 bg-slate-900"></li>
+          }
+        } @else if (search.hasValue()) {
+          <li
+            class="col-span-full rounded-xl border border-dashed border-slate-700 p-8 text-center text-slate-400"
+          >
+            @if (allPullRequests().length) {
+              Ningún PR coincide con los filtros.
+              <button
+                type="button"
+                class="text-violet-300 hover:underline"
+                (click)="clearFilters()"
+              >
+                Limpiar filtros
+              </button>
+            } @else {
+              No hay pull requests abiertos. 🎉
+            }
+          </li>
+        }
+      }
+    </ul>
+  </section>
+</div>
