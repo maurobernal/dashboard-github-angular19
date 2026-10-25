@@ -2,7 +2,12 @@ import { Component, input, model } from '@angular/core';
 import { debounce, form, FormField } from '@angular/forms/signals';
 import { ChipSelect } from '../../../shared/ui/chip-select/chip-select';
 import { REVIEW_LABELS } from '../pull-request.labels';
-import { DEFAULT_FILTERS, FilterOptions, PullRequestFilters } from '../pull-request-filters';
+import {
+  AGE_BUCKETS,
+  DEFAULT_FILTERS,
+  FilterOptions,
+  PullRequestFilters,
+} from '../pull-request-filters';
 
 @Component({
   selector: 'app-filters-panel',
@@ -19,6 +24,7 @@ export class FiltersPanel {
     debounce(path.search, 250);
   });
 
+  protected readonly ageBuckets = AGE_BUCKETS;
   protected readonly reviewOptions = Object.entries(REVIEW_LABELS);
 
   protected readonly repositoryName = (repository: string) =>

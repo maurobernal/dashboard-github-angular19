@@ -4,7 +4,7 @@
   aria-label="Filtros"
   class="grid gap-4 rounded-xl border border-slate-800 bg-slate-900/60 p-4"
 >
-  <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
+  <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8">
     <label class="field sm:col-span-2">
       <span>Buscar</span>
       <input type="search" placeholder="Título o #número" [formField]="filterForm.search" />
@@ -46,6 +46,16 @@
         <option value="all">Todas</option>
         @for (option of reviewOptions; track option[0]) {
           <option [value]="option[0]">{{ option[1] }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Antigüedad</span>
+      <select [formField]="filterForm.age">
+        <option value="all">Todas</option>
+        @for (bucket of ageBuckets; track bucket.id) {
+          <option [value]="bucket.id">{{ bucket.label }}</option>
         }
       </select>
     </label>

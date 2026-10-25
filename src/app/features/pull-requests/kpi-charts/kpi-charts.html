@@ -1,7 +1,8 @@
 <div class="grid gap-3 lg:grid-cols-2">
   <figure class="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-    <figcaption class="mb-2 text-sm text-slate-300">
+    <figcaption class="mb-2 flex items-baseline justify-between gap-2 text-sm text-slate-300">
       Top {{ byRepository().labels?.length }} repos con más PRs abiertos
+      <span class="text-xs text-slate-500">Click en una barra para filtrar</span>
     </figcaption>
     <div class="h-64">
       <canvas
@@ -9,13 +10,27 @@
         type="bar"
         [data]="byRepository()"
         [options]="horizontalBarOptions"
+        (chartClick)="onRepositoryClick($event)"
+        aria-label="PRs abiertos por repositorio"
+        role="img"
       ></canvas>
     </div>
   </figure>
   <figure class="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-    <figcaption class="mb-2 text-sm text-slate-300">Antigüedad de los PRs abiertos</figcaption>
+    <figcaption class="mb-2 flex items-baseline justify-between gap-2 text-sm text-slate-300">
+      Antigüedad de los PRs abiertos
+      <span class="text-xs text-slate-500">Click en una barra para filtrar</span>
+    </figcaption>
     <div class="h-64">
-      <canvas baseChart type="bar" [data]="byAge()" [options]="verticalBarOptions"></canvas>
+      <canvas
+        baseChart
+        type="bar"
+        [data]="byAge()"
+        [options]="verticalBarOptions"
+        (chartClick)="onAgeClick($event)"
+        aria-label="PRs abiertos por antigüedad"
+        role="img"
+      ></canvas>
     </div>
   </figure>
 </div>

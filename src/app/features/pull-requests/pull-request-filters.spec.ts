@@ -1,6 +1,7 @@
 import { convertToParamMap } from '@angular/router';
 import { PullRequest } from './pull-request.model';
 import {
+  ageBucketOf,
   DEFAULT_FILTERS,
   filterOptions,
   filtersFromParams,
@@ -58,6 +59,27 @@ describe('matchesFilters', () => {
   });
 });
 
+describe('age', () => {
+  const now = new Date('2026-10-25T12:00:00Z').getTime();
+  const daysAgo = (days: number) =>
+    pullRequest({ createdAt: new Date(now - days * 24 * 60 * 60 * 1000) });
+
+  it.each([
+    [0.5, 'day'],
+    [3, 'week'],
+    [20, 'month'],
+    [60, 'quarter'],
+    [400, 'older'],
+  ] as const)('puts a PR %s days old in the "%s" bucket', (days, bucket) => {
+    expect(ageBucketOf(daysAgo(days), now)).toBe(bucket);
+  });
+
+  it('filters by age bucket', () => {
+    expect(matchesFilters(daysAgo(3), withFilters({ age: 'week' }), now)).toBe(true);
+    expect(matchesFilters(daysAgo(3), withFilters({ age: 'older' }), now)).toBe(false);
+  });
+});
+
 describe('filterOptions', () => {
   it('returns distinct sorted values', () => {
     const options = filterOptions([
@@ -75,10 +97,15 @@ describe('filterOptions', () => {
 
 describe('URL query params', () => {
   it('round-trips non-default filters', () => {
-    const filters = withFilters({ search: 'fix', repositories: ['acme/web'], draft: 'ready' });
+    const filters = withFilters({
+      search: 'fix',
+      repositories: ['acme/web'],
+      draft: 'ready',
+      age: 'week',
+    });
     const params = filtersToParams(filters);
 
-    expect(params).toEqual({ q: 'fix', repo: ['acme/web'], draft: 'ready' });
+    expect(params).toEqual({ q: 'fix', repo: ['acme/web'], draft: 'ready', age: 'week' });
     expect(filtersFromParams(convertToParamMap(params))).toEqual(filters);
   });
 

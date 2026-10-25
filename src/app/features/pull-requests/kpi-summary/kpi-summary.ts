@@ -1,6 +1,7 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { KpiCharts } from '../kpi-charts/kpi-charts';
 import { PullRequest } from '../pull-request.model';
+import { PullRequestsStore } from '../pull-requests.store';
 
 @Component({
   selector: 'app-kpi-summary',
@@ -8,10 +9,10 @@ import { PullRequest } from '../pull-request.model';
   templateUrl: './kpi-summary.html',
 })
 export class KpiSummary {
-  readonly pullRequests = input.required<readonly PullRequest[]>();
+  private readonly store = inject(PullRequestsStore);
 
   protected readonly tiles = computed(() => {
-    const prs = this.pullRequests();
+    const prs = this.store.visiblePullRequests();
     const count = (predicate: (pr: PullRequest) => boolean) => prs.filter(predicate).length;
 
     return [
