@@ -18,8 +18,9 @@ function pullRequest(overrides: Partial<PullRequest> = {}): PullRequest {
     url: '',
     isDraft: false,
     createdAt: new Date(),
-    author: { login: 'alice', avatarUrl: '' },
+    author: { login: 'alice', avatarUrl: '', url: '' },
     repository: 'acme/web',
+    repositoryUrl: '',
     owner: 'org',
     labels: [{ name: 'bug', color: 'ff0000' }],
     comments: 0,
@@ -83,7 +84,7 @@ describe('age', () => {
 describe('filterOptions', () => {
   it('returns distinct sorted values', () => {
     const options = filterOptions([
-      pullRequest({ repository: 'acme/web', author: { login: 'bob', avatarUrl: '' } }),
+      pullRequest({ repository: 'acme/web', author: { login: 'bob', avatarUrl: '', url: '' } }),
       pullRequest({ repository: 'acme/api', labels: [{ name: 'ui', color: '' }] }),
     ]);
 

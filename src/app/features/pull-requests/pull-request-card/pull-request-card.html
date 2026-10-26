@@ -1,18 +1,32 @@
 @let pr = pullRequest();
+@let link = links();
 <article
   class="flex h-full flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900 p-4 transition hover:border-violet-500/50"
   [class.opacity-70]="pr.isDraft"
 >
   <header class="flex items-start justify-between gap-2 text-xs text-slate-400">
-    <span class="truncate" [title]="pr.repository">
+    <a
+      class="truncate hover:text-violet-300 hover:underline"
+      [href]="pr.repositoryUrl"
+      [title]="'Abrir ' + pr.repository + ' en GitHub'"
+      target="_blank"
+      rel="noopener"
+    >
       <i class="bi bi-journal-code" aria-hidden="true"></i> {{ pr.repository }}
-    </span>
-    <i
-      class="bi text-base {{ checkStyles[pr.checks].icon }} {{ checkStyles[pr.checks].classes }}"
-      role="img"
-      [attr.aria-label]="checkLabels[pr.checks]"
-      [title]="checkLabels[pr.checks]"
-    ></i>
+    </a>
+    <a
+      class="rounded-full text-base hover:brightness-125"
+      [href]="link.checks"
+      [title]="checkLabels[pr.checks] + ' · ver checks'"
+      [attr.aria-label]="checkLabels[pr.checks] + ', ver checks'"
+      target="_blank"
+      rel="noopener"
+    >
+      <i
+        class="bi {{ checkStyles[pr.checks].icon }} {{ checkStyles[pr.checks].classes }}"
+        aria-hidden="true"
+      ></i>
+    </a>
   </header>
 
   <h2 class="text-sm leading-snug font-semibold text-slate-100">
@@ -24,40 +38,66 @@
   @if (pr.labels.length) {
     <ul class="flex flex-wrap gap-1" aria-label="Labels">
       @for (label of pr.labels; track label.name) {
-        <li
-          class="badge"
-          [style.border-color]="'#' + label.color"
-          [style.background-color]="'#' + label.color + '26'"
-        >
-          {{ label.name }}
+        <li>
+          <a
+            class="badge hover:brightness-150"
+            [style.border-color]="'#' + label.color"
+            [style.background-color]="'#' + label.color + '26'"
+            [href]="link.labels.get(label.name)"
+            [title]="'PRs abiertos de ' + pr.repository + ' con label ' + label.name"
+            target="_blank"
+            rel="noopener"
+          >
+            {{ label.name }}
+          </a>
         </li>
       }
     </ul>
   }
 
   <footer class="mt-auto flex flex-wrap items-center gap-2 text-xs text-slate-400">
-    <img
-      class="size-5 rounded-full"
-      [src]="pr.author.avatarUrl"
-      alt=""
-      width="20"
-      height="20"
-      loading="lazy"
-    />
-    <span class="font-medium text-slate-300">{{ pr.author.login }}</span>
+    <a
+      class="flex items-center gap-2 hover:text-violet-300"
+      [href]="pr.author.url"
+      [title]="'Perfil de ' + pr.author.login"
+      target="_blank"
+      rel="noopener"
+    >
+      <img
+        class="size-5 rounded-full"
+        [src]="pr.author.avatarUrl"
+        alt=""
+        width="20"
+        height="20"
+        loading="lazy"
+      />
+      <span class="font-medium text-slate-300 hover:underline">{{ pr.author.login }}</span>
+    </a>
     <span [title]="pr.createdAt.toLocaleString('es-AR')">{{ pr.createdAt | relativeTime }}</span>
 
     <span class="ml-auto flex items-center gap-2">
       @if (pr.isDraft) {
         <span class="badge border-slate-600 text-slate-300">Draft</span>
       }
-      <span class="badge {{ reviewStyles[pr.review].classes }}">
+      <a
+        class="badge hover:brightness-125 {{ reviewStyles[pr.review].classes }}"
+        [href]="link.files"
+        [title]="reviewLabels[pr.review] + ' · ver cambios'"
+        target="_blank"
+        rel="noopener"
+      >
         <i class="bi {{ reviewStyles[pr.review].icon }}" aria-hidden="true"></i>
         {{ reviewLabels[pr.review] }}
-      </span>
-      <span class="badge border-slate-700" [title]="pr.comments + ' comentarios'">
+      </a>
+      <a
+        class="badge border-slate-700 hover:border-slate-500 hover:text-slate-200"
+        [href]="pr.url"
+        [title]="pr.comments + ' comentarios · ver conversación'"
+        target="_blank"
+        rel="noopener"
+      >
         <i class="bi bi-chat-left-text" aria-hidden="true"></i> {{ pr.comments }}
-      </span>
+      </a>
     </span>
   </footer>
 </article>

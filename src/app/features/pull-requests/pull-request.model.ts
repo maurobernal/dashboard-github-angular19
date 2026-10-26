@@ -17,9 +17,10 @@ export interface PullRequest {
   url: string;
   isDraft: boolean;
   createdAt: Date;
-  author: { login: string; avatarUrl: string };
+  author: { login: string; avatarUrl: string; url: string };
   /** `owner/name` */
   repository: string;
+  repositoryUrl: string;
   owner: Owner;
   labels: Label[];
   comments: number;

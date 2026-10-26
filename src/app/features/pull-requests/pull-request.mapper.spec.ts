@@ -10,8 +10,8 @@ function rawPullRequest(overrides: Partial<RawPullRequest> = {}): RawPullRequest
     isDraft: false,
     createdAt: '2026-10-01T10:00:00Z',
     reviewDecision: null,
-    author: { login: 'alice', avatarUrl: 'https://avatars/alice' },
-    repository: { nameWithOwner: 'acme/api' },
+    author: { login: 'alice', avatarUrl: 'https://avatars/alice', url: 'https://github.com/alice' },
+    repository: { nameWithOwner: 'acme/api', url: 'https://github.com/acme/api' },
     labels: { nodes: [{ name: 'bug', color: 'd73a4a' }] },
     comments: { totalCount: 3 },
     commits: { nodes: [{ commit: { statusCheckRollup: { state: 'SUCCESS' } } }] },
@@ -26,6 +26,7 @@ describe('toPullRequest', () => {
     expect(pr).toMatchObject({
       id: 'PR_1',
       repository: 'acme/api',
+      repositoryUrl: 'https://github.com/acme/api',
       owner: 'org',
       comments: 3,
       review: 'NONE',

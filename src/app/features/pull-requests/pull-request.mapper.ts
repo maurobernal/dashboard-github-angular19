@@ -4,7 +4,11 @@ import {
 } from '../../core/github/open-pull-requests.query';
 import { CheckState, Owner, PullRequest, PullRequestSearchResult } from './pull-request.model';
 
-const GHOST_AUTHOR = { login: 'ghost', avatarUrl: 'https://github.com/ghost.png' };
+const GHOST_AUTHOR = {
+  login: 'ghost',
+  avatarUrl: 'https://github.com/ghost.png',
+  url: 'https://github.com/ghost',
+};
 
 /** GraphQL reports query errors with HTTP 200, so they are turned into exceptions here. */
 export function toPullRequestSearchResult(
@@ -35,6 +39,7 @@ export function toPullRequest(raw: RawPullRequest, owner: Owner): PullRequest {
     createdAt: new Date(raw.createdAt),
     author: raw.author ?? GHOST_AUTHOR,
     repository: raw.repository.nameWithOwner,
+    repositoryUrl: raw.repository.url,
     owner,
     labels: raw.labels.nodes,
     comments: raw.comments.totalCount,

@@ -18,8 +18,8 @@ export const OPEN_PULL_REQUESTS_QUERY = `
         isDraft
         createdAt
         reviewDecision
-        author { login avatarUrl }
-        repository { nameWithOwner }
+        author { login avatarUrl url }
+        repository { nameWithOwner url }
         labels(first: 10) { nodes { name color } }
         comments { totalCount }
         commits(last: 1) { nodes { commit { statusCheckRollup { state } } } }
@@ -41,8 +41,8 @@ export interface RawPullRequest {
   createdAt: string;
   reviewDecision: 'APPROVED' | 'CHANGES_REQUESTED' | 'REVIEW_REQUIRED' | null;
   /** `null` when the author account was deleted. */
-  author: { login: string; avatarUrl: string } | null;
-  repository: { nameWithOwner: string };
+  author: { login: string; avatarUrl: string; url: string } | null;
+  repository: { nameWithOwner: string; url: string };
   labels: { nodes: { name: string; color: string }[] };
   comments: { totalCount: number };
   commits: {

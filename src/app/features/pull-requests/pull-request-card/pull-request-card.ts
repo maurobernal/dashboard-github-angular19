@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { RelativeTimePipe } from '../../../shared/pipes/relative-time.pipe';
 import { CHECK_LABELS, REVIEW_LABELS } from '../pull-request.labels';
 import { CheckState, PullRequest, ReviewState } from '../pull-request.model';
@@ -24,6 +24,21 @@ const CHECK_STYLES: Record<CheckState, { icon: string; classes: string }> = {
 })
 export class PullRequestCard {
   readonly pullRequest = input.required<PullRequest>();
+
+  /** GitHub pages behind each piece of information shown on the card. */
+  protected readonly links = computed(() => {
+    const pr = this.pullRequest();
+    return {
+      checks: `${pr.url}/checks`,
+      files: `${pr.url}/files`,
+      labels: new Map(
+        pr.labels.map((label) => [
+          label.name,
+          `${pr.repositoryUrl}/pulls?q=${encodeURIComponent(`is:pr is:open label:"${label.name}"`)}`,
+        ]),
+      ),
+    };
+  });
 
   protected readonly reviewLabels = REVIEW_LABELS;
   protected readonly reviewStyles = REVIEW_STYLES;
