@@ -38,6 +38,20 @@ y _Checks_; o classic PAT con `repo` + `read:org`.
 | `bun run lint`   | ESLint (angular-eslint, flat config) |
 | `bun run format` | Prettier                             |
 
+## Docker y acceso directo (macOS)
+
+```bash
+bun run docker:up   # build + levanta nginx en http://localhost:4280 (sólo localhost)
+bun run launcher    # crea "GitHub PR Dashboard.app" en el Escritorio
+```
+
+El acceso directo inicia Docker Desktop si está apagado, levanta el contenedor si está detenido
+(`restart: unless-stopped`) y abre el browser en http://localhost:4280. Si movés la carpeta del
+proyecto, volvé a correr `bun run launcher`.
+
+Después de cambiar código o el token, reconstruí la imagen con `bun run docker:up`: el acceso directo
+no reconstruye, sólo levanta lo que ya existe.
+
 ## Arquitectura
 
 ```

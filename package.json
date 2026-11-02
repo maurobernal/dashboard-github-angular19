@@ -8,7 +8,9 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false",
     "lint": "ng lint",
-    "format": "prettier --write \"src/**/*.{ts,html,css}\""
+    "format": "prettier --write \"src/**/*.{ts,html,css}\"",
+    "docker:up": "docker compose up -d --build",
+    "launcher": "./scripts/create-desktop-launcher.sh"
   },
   "private": true,
   "packageManager": "bun@1.3.14",

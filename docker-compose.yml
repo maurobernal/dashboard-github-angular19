@@ -1,0 +1,9 @@
+services:
+  dashboard:
+    build: .
+    image: github-pr-dashboard:latest
+    container_name: github-pr-dashboard
+    # Bound to localhost only: the bundle contains the GitHub token.
+    ports:
+      - '127.0.0.1:4280:80'
+    restart: unless-stopped

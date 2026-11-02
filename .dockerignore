@@ -1,0 +1,8 @@
+node_modules
+dist
+.angular
+.git
+.vscode
+coverage
+*.png
+# src/environments/github.secrets.ts is intentionally NOT ignored: the build needs it.
